@@ -1,0 +1,6 @@
+framework module Pods_DiaryOfObservation_DiaryOfObservationUITests {
+  umbrella header "Pods-DiaryOfObservation-DiaryOfObservationUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
