@@ -15,13 +15,24 @@ class MainReactor: Reactor {
     
     enum Mutation {
         case addMemoData(Diary)
+        case refreshDate(String)
     }
     
     struct State {
         var diaryList: [Diary] = []
+        var date: String?
     }
     
     let initialState = State()
+    
+    func transform(mutation: Observable<Mutation>) -> Observable<Mutation> {
+        // Util 함수 느낌인 DateFactory도 주입해서 써야할까?
+        let dateMutation = DateFactory.shared.getDateEveryFiveSeconds()
+            .flatMap { dateString -> Observable<Mutation> in
+                return .just(.refreshDate(dateString))
+            }
+        return Observable.merge(mutation, dateMutation)
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -35,8 +46,9 @@ class MainReactor: Reactor {
         
         switch mutation {
         case let .addMemoData(diary):
-            // 배운거1 - 파라미터를 넘기기 위해서는 enum의 파라미터를 활용한다.
             newState.diaryList.append(diary)
+        case let .refreshDate(dateString):
+            newState.date = dateString
         }
         
         return newState

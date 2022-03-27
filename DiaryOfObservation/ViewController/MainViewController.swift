@@ -38,7 +38,6 @@ class MainViewController: UIViewController, View {
         $0.alignment = .center
     }
     private let dataLabel = UILabel().then {
-        $0.text = " \(DateFactory.getCurrentDate())"
         $0.font = .systemFont(ofSize: 14)
         $0.textAlignment = .left
     }
@@ -81,10 +80,15 @@ class MainViewController: UIViewController, View {
                 return cell
             }
             .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.date }
+            .bind(to: self.dataLabel.rx.text)
+            .disposed(by: disposeBag)
     }
     
     private func getCurrentDiary() -> Diary {
-        let diary = Diary(content: inputTextView.text, date: DateFactory.getCurrentDate())
+        let diary = Diary(content: inputTextView.text, date: "")
         return diary
     }
 }
