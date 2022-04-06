@@ -63,7 +63,12 @@ class MainViewController: UIViewController, View {
 
     func bind(reactor: MainReactor) {
         confirmButton.rx.tap
-            .map { Reactor.Action.saveMemo(self.getCurrentDiary()) }
+            .map { Reactor.Action.saveMemo }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        inputTextView.rx.text
+            .map { Reactor.Action.setDiary($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -85,11 +90,6 @@ class MainViewController: UIViewController, View {
             .map { $0.date }
             .bind(to: self.dataLabel.rx.text)
             .disposed(by: disposeBag)
-    }
-    
-    private func getCurrentDiary() -> Diary {
-        let diary = Diary(content: inputTextView.text, date: "")
-        return diary
     }
 }
 
