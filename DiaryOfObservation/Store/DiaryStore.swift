@@ -8,8 +8,13 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import RxDataSources
 
-struct Diary {
+struct Diary: IdentifiableType {
+   public var identity: String {
+        return UUID().uuidString
+    }
+    
     let content: String
     let date: String
 }

@@ -9,6 +9,7 @@ import UIKit
 import Then
 import SnapKit
 import ReactorKit
+import RxDataSources
 
 class MainViewController: UIViewController, View {
 
@@ -54,6 +55,12 @@ class MainViewController: UIViewController, View {
         $0.register(DiaryTableViewCell.self, forCellReuseIdentifier: "DiaryTableViewCell")
 
     }
+    
+    let dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, Diary>> { dataSource, tableView, indexPath, item in
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DiaryTableViewCell", for: indexPath) as! DiaryTableViewCell
+        cell.titleLabel.text = item.content
+        return cell
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,18 +79,15 @@ class MainViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        // 배운거2 - 리액터킷에서 tableView는 RxDataSource를 활용한다.
-        // TODO: - section이 여러개인 경우는 어떻게 처리?
+        
+        dataSource.titleForHeaderInSection = { dataSource, index in
+            return dataSource.sectionModels[index].model
+        }
+        
+        // State
         reactor.state
-            .map { $0.diaryList }
-            .bind(to: self.tableView.rx.items) { tableView, index, item in
-                let indexPath = IndexPath(row: index, section: 0)
-                
-                let cell = tableView.dequeueReusableCell(withIdentifier: "DiaryTableViewCell", for: indexPath) as! DiaryTableViewCell
-                cell.titleLabel.text = item.content
-                
-                return cell
-            }
+            .map { $0.diarySectionList }
+            .bind(to: self.tableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
         
         reactor.state

@@ -7,6 +7,7 @@
 
 import Foundation
 import ReactorKit
+import RxDataSources
 
 class MainReactor: Reactor {
     var scheduler: Scheduler = SerialDispatchQueueScheduler(qos: .background)
@@ -31,6 +32,7 @@ class MainReactor: Reactor {
         var diaryList: [Diary] = []
         var date: String?
         var diary: String = ""
+        var diarySectionList: [SectionModel<String, Diary>] = []
     }
     
     let initialState = State()
@@ -54,6 +56,7 @@ class MainReactor: Reactor {
         switch mutation {
         case let .addMemoData:
             heavyCalculation()
+            newState.diarySectionList = getDataSourceMockData()
             let diary = Diary(content: state.diary, date: state.date ?? "")
             newState.diaryList.append(diary)
         case let .refreshDate(dateString):
@@ -69,5 +72,17 @@ class MainReactor: Reactor {
         for _ in 1...10 {
             print(Thread.isMainThread)
         }
+    }
+    
+    private func getDataSourceMockData() -> [SectionModel<String, Diary>] {
+        let mockData = [ SectionModel(model: "1월", items: [Diary(content: "fnfnfn", date: "2022.01.01"),
+                                                             Diary(content: "fnfnfn", date: "2022.01.11"),
+                                                             Diary(content: "fnfnfn", date: "2022.01.22")]),
+                         SectionModel(model: "2월", items: [Diary(content: "fnfnfn", date: "2022.02.01"),
+                                                             Diary(content: "fnfnfn", date: "2022.02.11"),
+                                                             Diary(content: "fnfnfn", date: "2022.02.22")])
+                         
+        ]
+        return mockData
     }
 }

@@ -11,6 +11,7 @@ target 'DiaryOfObservation' do
     pod 'RxSwift'
     pod 'RxCocoa'
     pod 'ReactorKit'
+    pod 'RxDataSources'
 
   target 'DiaryOfObservationTests' do
     inherit! :search_paths
