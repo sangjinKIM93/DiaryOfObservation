@@ -9,6 +9,8 @@ import Foundation
 import ReactorKit
 
 class MainReactor: Reactor {
+    var scheduler: Scheduler = SerialDispatchQueueScheduler(qos: .background)
+    
     let dateMutation = DateFactory.shared.getDateEveryFiveSeconds()
         .flatMap { dateString -> Observable<Mutation> in
             return .just(.refreshDate(dateString))
@@ -51,6 +53,7 @@ class MainReactor: Reactor {
         
         switch mutation {
         case let .addMemoData:
+            heavyCalculation()
             let diary = Diary(content: state.diary, date: state.date ?? "")
             newState.diaryList.append(diary)
         case let .refreshDate(dateString):
@@ -60,5 +63,11 @@ class MainReactor: Reactor {
         }
         
         return newState
+    }
+    
+    private func heavyCalculation() {
+        for _ in 1...10 {
+            print(Thread.isMainThread)
+        }
     }
 }
