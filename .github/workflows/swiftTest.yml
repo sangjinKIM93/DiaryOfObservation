@@ -15,5 +15,5 @@ jobs:
     - uses: actions/checkout@v3
     - name: Run tests
       run: | 
-          pod install --repo-update --clean-install --project-directory=DiaryOfObservation/
+          pod install --repo-update --clean-install
           xcodebuild test -project DiaryOfObservation/DiaryOfObservation.workspace -scheme DiaryOfObservation -destination 'platform=iOS Simulator,name=iPhone 11 Pro'
