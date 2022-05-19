@@ -16,4 +16,4 @@ jobs:
     - name: Run tests
       run: |
           pod install
-          xcodebuild test -project DiaryOfObservation.xcodeproj -scheme DiaryOfObservation -destination 'platform=iOS Simulator,name=iPhone 11 Pro'
+          xcodebuild test -project DiaryOfObservation.workspace -scheme DiaryOfObservation -destination 'platform=iOS Simulator,name=iPhone 11 Pro'
