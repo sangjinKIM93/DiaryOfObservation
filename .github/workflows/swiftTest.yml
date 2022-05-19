@@ -14,4 +14,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Run tests
-      run: xcodebuild test -project DiaryOfObservation.xcodeproj -scheme DiaryOfObservation -destination 'platform=iOS Simulator,name=iPhone 11 Pro,OS=14.4'
+      run: swift test -v
